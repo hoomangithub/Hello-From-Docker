@@ -41,5 +41,5 @@
 > docker run -d -p 8082:8080 quay.io/hoomi71/hello_from_openjdk11:**TAG**
  
 ## Call Application
-- http://localhost:8086/hello 
-- http://localhost:8086/hello?name=Hooman
+- http://localhost:8082/hello 
+- http://localhost:8082/hello?name=Hooman
