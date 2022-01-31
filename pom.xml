@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.6</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>link.hooman</groupId>
+    <artifactId>HelloFromDocker</artifactId>
+    <version>1.0.0</version>
+    <name>HelloFromDocker</name>
+    <description>Demo project for Spring Boot and Docker</description>
+    <properties>
+        <java.version>11</java.version>
+        <jib.version>3.2.0</jib.version>
+        <docker.repo.quay.from>quay.io/hoomi71</docker.repo.quay.from>
+        <docker.repo.quay.to>quay.io/hoomi71</docker.repo.quay.to>
+        <docker.repo.dockerhub.from>registry.hub.docker.com/hoomi71</docker.repo.dockerhub.from>
+        <docker.repo.dockerhub.to>registry.hub.docker.com/hoomi71</docker.repo.dockerhub.to>
+        <!-- jib:dockerBuild -->
+        <docker.repo.local.from>docker:/</docker.repo.local.from>
+        <docker.repo.local.to>docker:/</docker.repo.local.to>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+
+        <!-- Standard Jib "Ubuntu 20.04.3 LTS"  -->
+        <!-- mvn compile jib:dockerBuild -PJib -->
+        <profile>
+            <id>Jib</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>${jib.version}</version>
+                        <configuration>
+                            <to>
+                                <image>hello_from_docker:${version}</image>
+                            </to>
+                            <container>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                            </container>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- mvn compile jib:build -PJibCustomized -->
+        <profile>
+            <id>JibCustomized</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>${jib.version}</version>
+                        <configuration>
+                            <to>
+                                <image>${docker.repo.quay.to}/hello_from_openjdk11:1.0.1</image>
+                            </to>
+                            <from>
+                                <image>${docker.repo.quay.from}/openjdk11.0.13-jre-slim_base:310122</image>
+                            </from>
+                            <container>
+                                <user>javauser</user>
+                                <workingDirectory>/home/javauser/</workingDirectory>
+                                <jvmFlags>
+                                    <jvmFlag>-Xms2g</jvmFlag>
+                                    <jvmFlag>-Xmx4g</jvmFlag>
+                                </jvmFlags>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                            </container>
+                        </configuration>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+</project>

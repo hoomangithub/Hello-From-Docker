@@ -1,0 +1,22 @@
+FROM alpine:latest
+
+MAINTAINER Hooman Paknahad
+
+RUN apk update && apk --no-cache add openjdk11
+
+RUN addgroup -S javagroup && adduser -S javauser -G javagroup
+USER javauser
+
+ENV JAVA_HOME="/usr/lib/jvm/default-jvm/"
+ENV PATH=$PATH:${JAVA_HOME}/bin
+
+WORKDIR /home/javauser/
+
+COPY  --chown=javauser:javagroup target/HelloFromDocker-1.0.0.jar  webapp.jar
+
+EXPOSE 8080
+
+CMD ["java", "-Xms2g", "-Xmx4g", "-jar","webapp.jar"]
+
+# https://pkgs.alpinelinux.org/packages
+# https://snyk.io/blog/best-practices-to-build-java-containers-with-docker/

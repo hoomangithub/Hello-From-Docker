@@ -1,0 +1,12 @@
+FROM openjdk:11.0.13-jre-slim
+
+MAINTAINER Hooman
+
+RUN groupadd -f javagroup \
+	&& useradd -G javagroup javauser \
+	&& mkdir /home/javauser \
+	&& chown -R javauser:javagroup /home/javauser
+
+USER javauser
+
+WORKDIR /home/javauser
